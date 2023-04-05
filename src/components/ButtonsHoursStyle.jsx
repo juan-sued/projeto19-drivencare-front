@@ -13,9 +13,9 @@ export default function ButtonsHours({ date, title, setPayload }) {
 
     const newDate = dateInString.replace(currentHour, hourSelected);
 
-    setPayload({ timestamp: new Date(newDate).getTime() });
+    setPayload({ timestamp: new Date(newDate.toLocaleString()) });
   }
-
+  const hoursDisabled = ['7', '10', '15', '17'];
   const morningHours = ['7', '8', '9', '10', '11'];
   const afternoonHours = ['13', '14', '15', '16', '17', '18'];
 
@@ -29,7 +29,14 @@ export default function ButtonsHours({ date, title, setPayload }) {
         </div>
         <div className="buttonsContainer">
           {morningHours.map((hour, index) => (
-            <ButtonHour key={index} hour={hour} alterHour={alterHour} />
+            <ButtonHour
+              key={index}
+              hour={hour}
+              alterHour={alterHour}
+              disabled={hoursDisabled.find(
+                hourDisabled => hourDisabled === hour
+              )}
+            />
           ))}
         </div>
       </ButtonsHoursStyle>
@@ -42,7 +49,14 @@ export default function ButtonsHours({ date, title, setPayload }) {
         </div>
         <div className="buttonsContainer">
           {afternoonHours.map((hour, index) => (
-            <ButtonHour key={index} hour={hour} alterHour={alterHour} />
+            <ButtonHour
+              key={index}
+              hour={hour}
+              alterHour={alterHour}
+              disabled={hoursDisabled.find(
+                hourDisabled => hourDisabled === hour
+              )}
+            />
           ))}
         </div>
       </ButtonsHoursStyle>
@@ -50,7 +64,7 @@ export default function ButtonsHours({ date, title, setPayload }) {
   }
 }
 
-export function ButtonHour({ hour, alterHour }) {
+export function ButtonHour({ hour, alterHour, disabled }) {
   return (
     <label className="radio">
       <input
@@ -58,6 +72,7 @@ export function ButtonHour({ hour, alterHour }) {
         name="radio"
         value={hour + ':00:00'}
         onChange={alterHour}
+        disabled={disabled}
       />
       <span className="name">{hour}:00</span>
     </label>
@@ -72,7 +87,7 @@ const ButtonsHoursStyle = styled.div`
   justify-content: center;
   flex-direction: column;
   font-size: 10px;
-  margin-top: 19px;
+  margin-top: 30px;
   .buttonsContainer {
     position: relative;
     display: flex;
@@ -84,6 +99,7 @@ const ButtonsHoursStyle = styled.div`
     padding: 0.25rem;
     width: 100%;
     font-size: 14px;
+    margin-top: 15px;
 
     .radio {
       flex: 1 1 auto;
@@ -113,6 +129,14 @@ const ButtonsHoursStyle = styled.div`
     .radio input:checked + .name {
       background-color: #fff;
       font-weight: 600;
+    }
+    .radio input:disabled + .name {
+      color: rgba(0, 0, 0, 0.2);
+      font-weight: 600;
+      cursor: not-allowed;
+      :hover {
+        background-color: transparent;
+      }
     }
   }
 `;
