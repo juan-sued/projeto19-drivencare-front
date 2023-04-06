@@ -1,8 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
 
-const PrivateRoutes = () => (
+const PatientRoutes = () => (
   <Routes>
     <Route></Route>
   </Routes>
 );
-export default PrivateRoutes;
+export default PatientRoutes;

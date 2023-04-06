@@ -23,12 +23,13 @@ export const AuthProvider = ({ children }) => {
     signInData,
     setStateCollorButton,
     setSignIndata,
-    typeUser
+    isDoctorsOrPatients
   }) {
-    setStateCollorButton('#8a8893');
-
     try {
-      const { data } = await axiosI.post(`${typeUser}/sign-in`, signInData);
+      const { data } = await axiosI.post(
+        `/${isDoctorsOrPatients}/sign-in`,
+        signInData
+      );
 
       setUserInfo(data.user);
 
@@ -42,7 +43,8 @@ export const AuthProvider = ({ children }) => {
         email: '',
         password: ''
       });
-      setStateCollorButton('#e21a27');
+
+      setStateCollorButton(err.response.status);
     }
   }
 

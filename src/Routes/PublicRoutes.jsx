@@ -1,13 +1,13 @@
 import { Routes, Route } from 'react-router-dom';
 import HomePage from '../screens/Home/HomePage';
-import LoginPage from '../screens/SignInPage/SignInPage';
 import SignUpPage from '../screens/SignUpPage/SignUpPage';
+import SignInPage from '../screens/SignInPage/SignInPage';
 
 const PublicRoutes = () => (
   <Routes>
-    <Route path="/sing-in" element={<LoginPage />} />
-    <Route path="/sign-up" element={<SignUpPage />} />
     <Route path="/" element={<HomePage />} />
+    <Route path="/sign-in" element={<SignInPage />} />
+    <Route path="/sign-up" element={<SignUpPage />} />
   </Routes>
 );
 

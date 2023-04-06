@@ -6,51 +6,61 @@ import { FcGoogle } from 'react-icons/fc';
 
 import { useAuth } from '../../hooks/useAuth.jsx';
 import { useState } from 'react';
+import FlipHorizontToggle from '../toggles/FlipHorizontToggle.jsx';
+import { useNavigate } from 'react-router-dom';
+import MedicLoading from '../loadings/MedicLoading.jsx';
 
 export default function FormLoginWithButtonsAppleAndGoogle() {
   const { signIn } = useAuth();
+
+  const navigate = useNavigate();
 
   const [signInData, setSignIndata] = useState({
     email: '',
     password: ''
   });
 
-  const [stateColorButton, setStateCollorButton] = useState('#ffffff');
+  const [stateCollorButton, setStateCollorButton] = useState('#ffffff');
 
+  const [isChecked, setIsChecked] = useState(false);
   const handleChangeText = e => {
     setSignIndata({ ...signInData, [e.target.name]: e.target.value });
   };
 
   function newLogin(event) {
     event.preventDefault();
-
+    setStateCollorButton('loading');
+    const isDoctorsOrPatients = isChecked ? 'doctors' : 'patients';
     signIn({
       signInData,
       setStateCollorButton,
       setSignIndata,
-      typeUser
+      isDoctorsOrPatients
     });
   }
 
-  if (stateColorButton === '#e21a27' && signInData.email.length > 0) {
-    setStateCollorButton('#ffffff');
+  if (
+    (stateCollorButton === 422 || stateCollorButton === 409) &&
+    signInData.email.length > 0
+  ) {
+    setStateCollorButton('#115dfc');
   }
 
   return (
-    <FormLoginWithButtonsAppleAndGoogleStyle>
-      <form class="form_container" onSubmit={newLogin}>
-        <div class="logo_container">
+    <FormLoginWithButtonsAppleAndGoogleStyle
+      stateCollorButton={stateCollorButton}
+    >
+      <form className="form_container" onSubmit={newLogin}>
+        <div className="logo_container" onClick={() => navigate('/')}>
           <FaHandHoldingMedical />
         </div>
-        <div class="title_container">
-          <p class="title">DrivenCare</p>
-          <span class="subtitle">
-            Entre ou cadastre-se para ter menos stress e mais saúde
-          </span>
+        <div className="title_container">
+          <h1 className="title">DrivenCare</h1>
+          <span className="subtitle">Menos stress e mais saúde</span>
         </div>
         <br />
-        <div class="input_container">
-          <label class="input_label" for="email_field">
+        <div className="input_container">
+          <label className="input_label" htmlFor="email_field">
             Email
           </label>
           <CiMail className="iconInput" size={20} />
@@ -58,15 +68,15 @@ export default function FormLoginWithButtonsAppleAndGoogle() {
             placeholder="name@mail.com"
             title="Inpit title"
             name="email"
-            type="text"
-            class="input_field"
+            type="email"
+            className="input_field"
             id="email_field"
             value={signInData.email}
             onChange={handleChangeText}
           />
         </div>
-        <div class="input_container">
-          <label class="input_label" for="password_field">
+        <div className="input_container">
+          <label className="input_label" htmlFor="password_field">
             Password
           </label>
           <CiLock className="iconInput" size={20} />
@@ -75,38 +85,67 @@ export default function FormLoginWithButtonsAppleAndGoogle() {
             title="Inpit title"
             name="password"
             type="password"
-            class="input_field"
+            className="input_field"
             id="password_field"
             value={signInData.password}
             onChange={handleChangeText}
           />
         </div>
-        <button title="Sign In" type="submit" class="sign-in_btn">
-          <span>Entrar</span>
+
+        <div className="containerCheckBoxIsDoctor">
+          <p>Você é um Médico?</p>
+
+          <FlipHorizontToggle
+            isChecked={isChecked}
+            setIsChecked={setIsChecked}
+          />
+        </div>
+        <button
+          title="Sign In"
+          type="submit"
+          className="sign-in_btn"
+          disabled={stateCollorButton === 'loading' ? true : false}
+        >
+          <span>
+            {stateCollorButton === 'loading' ? (
+              <MedicLoading />
+            ) : stateCollorButton === 409 ? (
+              'Usuário já cadastrado'
+            ) : stateCollorButton === 422 ? (
+              'Dados Incorretos'
+            ) : (
+              'REGISTRAR'
+            )}
+          </span>
         </button>
 
-        <div class="separator">
-          <hr class="line" />
+        <div className="separator">
+          <hr className="line" />
           <span>Ou</span>
-          <hr class="line" />
+          <hr className="line" />
         </div>
-        <button title="Sign In" type="submit" class="sign-in_ggl">
+        <button title="Sign In" type="submit" className="sign-in_ggl">
           <FcGoogle size={20} />
           <span>Entrar com Google</span>
         </button>
-        <button title="Sign In" type="submit" class="sign-in_apl">
+        <button title="Sign In" type="submit" className="sign-in_apl">
           <FaApple size={20} />
           <span>Entrar com Apple</span>
         </button>
-        <div class="separator">
-          <hr class="line" />
+        <div className="separator">
+          <hr className="line" />
           <span>Ou</span>
-          <hr class="line" />
+          <hr className="line" />
         </div>
-        <button title="Sign In" type="submit" class="sign-in_btn register_btn">
+        <button
+          title="Sign In"
+          type="submit"
+          className="sign-in_btn register_btn"
+          onClick={() => navigate('/sign-up')}
+        >
           <span>Cadastre-se</span>
         </button>
-        <p class="note">Termos &amp; Condições de uso</p>
+        <p className="note">Termos &amp; Condições de uso</p>
       </form>
     </FormLoginWithButtonsAppleAndGoogleStyle>
   );
@@ -114,7 +153,8 @@ export default function FormLoginWithButtonsAppleAndGoogle() {
 
 const FormLoginWithButtonsAppleAndGoogleStyle = styled.div`
   .form_container {
-    width: fit-content;
+    width: 500px;
+
     height: fit-content;
     display: flex;
     flex-direction: column;
@@ -128,6 +168,23 @@ const FormLoginWithButtonsAppleAndGoogleStyle = styled.div`
       0px 7px 15px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
     border-radius: 11px;
     font-family: 'Inter', sans-serif;
+  }
+
+  .containerCheckBoxIsDoctor {
+    width: 100%;
+    display: flex;
+
+    justify-content: center;
+
+    p {
+      font-size: 15px;
+      width: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 10px;
+    }
+    padding: 0px 0 0px 0;
   }
 
   .logo_container {
@@ -148,6 +205,17 @@ const FormLoginWithButtonsAppleAndGoogleStyle = styled.div`
     justify-content: center;
     font-size: 30px;
     color: rgba(0, 0, 0, 0.6);
+    transition: all 0.3s ease-in-out;
+    :hover {
+      cursor: pointer;
+      box-shadow: rgba(0, 239, 239, 0.5) 0px 25px 20px -20px;
+    }
+
+    :active {
+      box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+        rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
+        rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+    }
   }
 
   .title_container {
@@ -171,6 +239,7 @@ const FormLoginWithButtonsAppleAndGoogleStyle = styled.div`
     text-align: center;
     line-height: 1.1rem;
     color: #8b8e98;
+    width: 200px;
   }
 
   .input_container {
@@ -217,7 +286,12 @@ const FormLoginWithButtonsAppleAndGoogleStyle = styled.div`
     width: 100%;
     height: 40px;
     border: 0;
-    background: #115dfc;
+    background: ${props =>
+      props.stateCollorButton === 422 || props.stateCollorButton === 409
+        ? '#e21a27'
+        : props.stateCollorButton === 'loading'
+        ? '#d4d4d4'
+        : '#115dfc'};
     border-radius: 7px;
     outline: none;
     color: #ffffff;
@@ -282,5 +356,28 @@ const FormLoginWithButtonsAppleAndGoogleStyle = styled.div`
     font-size: 0.75rem;
     color: #8b8e98;
     text-decoration: underline;
+    :hover {
+      cursor: pointer;
+      color: #212121;
+      opacity: 0.8;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .form_container {
+      width: fit-content;
+    }
+
+    .containerLine {
+      flex-direction: column;
+      margin-bottom: 0px;
+      .inputEmail {
+        max-width: 100%;
+      }
+    }
+
+    .input_container {
+      margin-right: 0px;
+    }
   }
 `;

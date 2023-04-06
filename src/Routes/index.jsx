@@ -1,14 +1,14 @@
 import { useAuth } from '../hooks/useAuth';
-import AdministratorRoutes from './AdministratorRoutes';
-import PrivateRoutes from './PrivateRoutes';
+import DoctorRoutes from './DoctorRoutes';
+import PatientRoutes from './DoctorRoutes';
 import PublicRoutes from './PublicRoutes';
 const Routes = () => {
   const { signed, userInfo } = useAuth();
-  console.log(signed);
+
   if (signed) {
-    return <AdministratorRoutes />;
+    return <DoctorRoutes />;
   } else if (userInfo && !userInfo.isAdministrator) {
-    return <PrivateRoutes />;
+    return <PatientRoutes />;
   } else {
     return <PublicRoutes />;
   }

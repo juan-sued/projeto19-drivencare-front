@@ -3,13 +3,13 @@ import styled from 'styled-components';
 export default function ToggleHeart() {
   return (
     <ToggleHeartStyle>
-      <div class="love">
+      <div className="love">
         <input id="switch" type="checkbox" />
-        <label class="love-heart" for="switch">
-          <i class="left"></i>
-          <i class="right"></i>
-          <i class="bottom"></i>
-          <div class="round"></div>
+        <label className="love-heart" htmlFor="switch">
+          <i className="left"></i>
+          <i className="right"></i>
+          <i className="bottom"></i>
+          <div className="round"></div>
         </label>
       </div>
     </ToggleHeartStyle>
